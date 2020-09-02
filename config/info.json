@@ -1,0 +1,38 @@
+{
+    "notify": [
+        "ianderson.pablo@spix.pt"
+    ],
+    "notifing_email": "ipizette@gmail.com",
+    "password": "kiko25801a",
+    "smtp_to_connect": "smtp.gmail.com",
+    "port": 587,
+    "ips": [
+        "betchamps.com",
+        "betchamps.co.mz",
+        "62.138.14.156"
+    ],
+    "num_pings": 3,
+    "loss_rate": 50,
+    "servers": [
+        "http://sevenfinanceira.com",
+        "https://www.betchamps.com",
+        "https://www.betchamps.com/serverconfig.js",
+        "https://www.betchamps.co.mz",
+        "https://www.betchamps.co.mz/serverconfig.js",
+        "http://62.138.14.156/getOdds/",
+        "http://62.138.14.156/status",
+        "http://62.138.14.156/api/v1/unifiedproducerstatus/",
+        "http://62.138.14.156:8080/latest"
+    ],
+    "timestampcheck_urls":[
+        ["http://62.138.14.156/status", "lastUpdate"],
+        ["http://62.138.14.156/api/v1/unifiedproducerstatus/", "last_message_timestamp"],
+        ["http://62.138.14.156:8080/latest", "updatedAt"]
+    ],
+    "max_timeout": 60,
+    "max_lastUpdate_delay": 60,
+    "max_hour_delay": 1,
+    "days_to_subtract": 1,
+    "days_to_subtract_ping": 1,
+    "days_to_subtract_server": 1
+}
