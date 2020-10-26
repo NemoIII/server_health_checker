@@ -1,5 +1,6 @@
 import os
 import smtplib
+from datetime import datetime, timedelta
 from configuration import settings
 from dispatcher import Dispatcher
 from email.mime.text import MIMEText
@@ -7,6 +8,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 import base64
 from email.utils import make_msgid
+from twilio.rest import Client, TwilioException
+
 
 receivers = settings["notify"] 
 sender = settings["notifing_email"]
@@ -15,13 +18,11 @@ smtp_connection = settings["smtp_to_connect"]
 port_connection = settings["port"]
 
 """
-		Classe que notifica aos usuários registrados no info.json, mas apenas os que apresentarem erro.
+	Classe que notifica aos usuários registrados no info.json, mas apenas os que apresentarem erro.
 
-		- def: notify_user
-			:param: self
-		- def: sms_user
-			:param: self
-	"""
+	- def: notify_user
+		:param: self
+"""
 class Notification:
 	def notify_user(self):
 			# Recebe os pops vindo do Dispatcher, para poder rodar no 'for'.
@@ -76,5 +77,87 @@ class Notification:
 
 						refresh_report = Dispatcher().pop(body)
 
+"""
+	Classe que notifica aos usuários registrados no info.json, mas apenas os que apresentarem erro.
+
+	- def: sms_whatsapp_user
+		:param: self
+"""
+class SMS_WhatsApp_Notification:
+	def sms_whatsapp_user(self):
+		try:
+			# Recebe os pops vindo do Dispatcher, para poder rodar no 'for'.
+			parameters_sms = [("provider_ping", "Urgente - Ping"), ("provider_server_status", "Urgente - Servidor"), ("provider_timestamp", "Urgente - TimesStamp"), ("provider_lastUpdate", "Urgente - Last Update"), ("provider_updateAt", "Urgente - Update At"), ("provider_sqlite", "Urgente - Base de Dados")]
+
+			# Realiza a autenticação do serviço do Twilio e de usuário.
+			client = Client(settings["account_sid_twilio"], settings["auth_token_twilio"])
+
+			for (sms_message, alert) in parameters_sms:
+				# Verifica qual problema repetiu por mais de 3 vezes no tempo (configurável) de 5 minutos (default).
+				alert_search = Dispatcher().fetch_all(sms_message, (datetime.now() - timedelta(minutes=settings["sms_time_check"])), datetime.now())
+
+				# Se o número de recorreência for superior ao valor estabelecido no info.json, ele dispara o sms.
+				if len(alert_search) > settings["sms_time_check"]:
+					Dispatcher().pop("sms_twilio_sended")
+					if alert_search is not None:
+						"""
+							Para enviar mensagens com o WhatsApp em produção, o WhatsApp precisa aprovar formalmente sua conta. No https://www.twilio.com/console/sms/whatsapp/learn você confirma a conta com o WhatsApp. Enquanto não aprovar a conta, ligada ao número, dará o erro que está aqui https://www.twilio.com/docs/errors/21211.
+						"""
+						message = client.messages.create(
+							body = (f"Temos um problema {alert}!"),
+							from_= settings["from_mobile"], # para envio de mensagem por WhatsApp, basta colocar settings["from_whatsapp"]
+							to = settings["to_mobile"] # para envio de mensagem por WhatsApp, basta colocar settings["to_whatsapp"]
+						)
+						message.sid
+						sms_sended = {
+						"alert": alert,
+						"date": datetime.now()
+						}
+						Dispatcher().push("sms_twilio_sended", sms_sended)
+
+		except TwilioException as tw:
+			twilio_fail = {
+				"falha": tw,
+				"date": datetime.now()
+			}
+			Dispatcher().push("twilio_error_report", twilio_fail)
+
+"""
+	Classe que notifica aos usuários registrados no info.json, mas apenas os que apresentarem erro.
+
+	- def: sms_user
+		:param: self
+"""
+class SMS_Notification:
 	def sms_user(self):
-		pass
+		import requests
+		try:
+			# Recebe os pops vindo do Dispatcher, para poder rodar no 'for'.
+			parameters_sms = [("provider_ping", "Urgente - Ping"), ("provider_server_status", "Urgente - Servidor"), ("provider_timestamp", "Urgente - TimesStamp"), ("provider_lastUpdate", "Urgente - Last Update"), ("provider_updateAt", "Urgente - Update At"), ("provider_sqlite", "Urgente - Base de Dados")]
+
+			for (sms_message, alert) in parameters_sms:
+				# Verifica qual problema repetiu por mais de 3 vezes no tempo (configurável) de 5 minutos (default).
+				alert_search = Dispatcher().fetch_all(sms_message, (datetime.now() - timedelta(minutes=settings["sms_time_check"])), datetime.now())
+
+				# Se o número de recorreência for superior ao valor estabelecido no info.json, ele dispara o sms.
+				if len(alert_search) > settings["sms_time_check"]:
+					Dispatcher().pop("sms_textbelt_sended")
+					if alert_search is not None:
+						message = requests.post(settings["textbelt_end_point"],{
+							"phone": settings["from_textbelt_mobile"],
+							"body": (f"Temos um problema {alert}!"),
+							"key": settings["textbelt_key"]
+						})
+						message.json()
+						sms_sended = {
+						"alert": alert,
+						"date": datetime.now()
+						}
+						Dispatcher().push("sms_textbelt_sended", sms_sended)
+
+		except Exception as ex:
+			textbelt_fail = {
+				"falha": ex,
+				"date": datetime.now()
+			}
+			Dispatcher().push("textbelt_error_report", textbelt_fail)

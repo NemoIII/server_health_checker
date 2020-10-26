@@ -1,28 +1,24 @@
 {
     "notify": [
-        "ianderson.pablo@spix.pt"
+        "ipizette@gmail.com"
     ],
-    "notifing_email": "ipizette@gmail.com",
-    "password": "kiko25801a",
-    "smtp_to_connect": "smtp.gmail.com",
+    "from_mobile": "+12184526855",
+    "to_mobile": "+351911509368",
+    "_comment_whatsapp": "Aqui precisa pegar as informações geradas no Twilio.",
+    "from_whatsapp": "whatsapp:+12184526855",
+    "to_whatsapp": "whatsapp:+351911509368",
+    "notifing_email": "pablo.iii@outlook.com",
+    "password": "PabloPizette1'",
+    "smtp_to_connect": "smtp.office365.com",
     "port": 587,
     "ips": [
-        "betchamps.com",
-        "betchamps.co.mz",
-        "62.138.14.156"
+        "1.1.1.1",
+        "1.0.1.1"
     ],
     "num_pings": 3,
     "loss_rate": 50,
     "servers": [
-        "http://sevenfinanceira.com",
-        "https://www.betchamps.com",
-        "https://www.betchamps.com/serverconfig.js",
-        "https://www.betchamps.co.mz",
-        "https://www.betchamps.co.mz/serverconfig.js",
-        "http://62.138.14.156/getOdds/",
-        "http://62.138.14.156/status",
-        "http://62.138.14.156/api/v1/unifiedproducerstatus/",
-        "http://62.138.14.156:8080/latest"
+        "https://pablo-iii.github.io"        
     ],
     "timestampcheck_urls":[
         ["http://62.138.14.156/status", "lastUpdate"],
@@ -34,5 +30,14 @@
     "max_hour_delay": 1,
     "days_to_subtract": 1,
     "days_to_subtract_ping": 1,
-    "days_to_subtract_server": 1
+    "days_to_subtract_server": 1,
+    "_comment_twilio": "Aqui precisa pegar as informações geradas no Twilio.",
+    "account_sid_twilio": "ACee6303777d95d803ad5ac032cdabf98f",
+    "auth_token_twilio": "4dc0c338c0bd02ad0b2d0efa3d3801bc",
+    "_comment_textbel": "Aqui precisa colocar o link da api do textbelt.",
+    "textbelt_end_point": "https://textbelt.com/text",
+    "from_textbelt_mobile": "telefone registrado no textbelt",
+    "textbelt_key": "e21e2428d28cfa1dc6ad8773a924ce14e42fdf2f58DUtCB17p7IgZlBnAjPMl34r",
+    "sms_time_check": 5,
+    "times_to_check": 5
 }
