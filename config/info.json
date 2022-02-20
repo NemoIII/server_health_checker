@@ -6,9 +6,9 @@
     "to_mobile": "+351911509368",
     "_comment_whatsapp": "Aqui precisa pegar as informações geradas no Twilio.",
     "from_whatsapp": "whatsapp:+12184526855",
-    "to_whatsapp": "whatsapp:+351911509368",
-    "notifing_email": "pablo.iii@outlook.com",
-    "password": "PabloPizette1'",
+    "to_whatsapp": "whatsapp:+351**********",
+    "notifing_email": "email here",
+    "password": "password here",
     "smtp_to_connect": "smtp.office365.com",
     "port": 587,
     "ips": [
