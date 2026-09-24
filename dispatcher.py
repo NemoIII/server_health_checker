@@ -161,7 +161,7 @@ class Dispatcher(object):
         except sqlite3.Error as sql_error:
             error = {
                 "sql_error": str(sql_error),
-                "date": datetime.datetime.now()
+                "date": datetime.now()
             }
             self.push("provider_sqlite", error)
     
